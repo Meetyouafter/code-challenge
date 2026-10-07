@@ -1,5 +1,5 @@
-import RetryIcon from "../../assets/icons/retry.svg?react";
-import WarningIcon from "../../assets/icons/warning.svg?react";
+import RetryIcon from "@/assets/icons/retry.svg?react";
+import WarningIcon from "@/assets/icons/warning.svg?react";
 import styles from "./LoadError.module.scss";
 
 interface ILoadError {

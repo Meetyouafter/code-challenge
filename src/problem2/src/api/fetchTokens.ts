@@ -1,5 +1,5 @@
-import { PRICES_URL } from "../constants";
-import type { Token } from "../types";
+import { PRICES_URL } from "@/constants";
+import type { Token } from "@/types";
 
 export async function fetchTokens(): Promise<Token[]> {
   const res = await fetch(PRICES_URL);

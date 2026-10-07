@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { fetchTokens } from "../api/fetchTokens";
-import type { Token } from "../types";
+import { fetchTokens } from "@/api/fetchTokens";
+import type { Token } from "@/types";
 
 export function useTokens() {
   const [tokens, setTokens] = useState<Token[] | null>(null);

@@ -1,7 +1,7 @@
-import { useTokens } from "../../hooks/useTokens";
-import Spinner from "../Spinner/Spinner";
-import LoadError from "../LoadError/LoadError";
-import ToastProvider from "../Toast/ToastContext";
+import { useTokens } from "@/hooks/useTokens";
+import Spinner from "@/components/Spinner/Spinner";
+import LoadError from "@/components/LoadError/LoadError";
+import ToastProvider from "@/components/Toast/ToastContext";
 import styles from "./App.module.scss";
 
 const App = () => {
