@@ -20,6 +20,7 @@
   "homepage": "https://github.com/Meetyouafter/code-challenge#readme",
   "devDependencies": {
     "@types/node": "^26.6.4",
+    "@types/react": "^19.3.0",
     "typescript": "^7.0.2"
   }
 }
