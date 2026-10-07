@@ -1,0 +1,38 @@
+body {
+  min-height: 100vh;
+  min-width: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  font-family: Inter, system-ui, Arial, sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at 20% 10%, #2a1f6b 0, transparent 40%),
+    radial-gradient(circle at 85% 90%, #0b4a6b 0, transparent 40%), var(--bg);
+
+  @media (max-width: 360px) {
+    padding: 8px;
+  }
+}
+
+input {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: 0;
+  outline: 0;
+  color: var(--text);
+  font-size: 26px;
+  font-weight: 600;
+
+  &::placeholder {
+    color: #4a506f;
+  }
+}
+
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent2);
+  outline-offset: 2px;
+}
