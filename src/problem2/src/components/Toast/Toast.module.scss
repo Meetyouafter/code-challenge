@@ -1,0 +1,32 @@
+.toast {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  transform: translateX(calc(100% + 16px));
+  background: var(--ok);
+  color: #04261a;
+  font-weight: 600;
+  padding: 12px 18px;
+  border-radius: 12px;
+  opacity: 0;
+  transition:
+    transform 0.3s,
+    opacity 0.3s;
+  max-width: 360px;
+
+  &.show {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  @media (max-width: 480px) {
+    inset: 16px 16px auto 16px;
+    max-width: none;
+    text-align: center;
+    transform: translateY(-100px);
+
+    &.show {
+      transform: translateY(0);
+    }
+  }
+}

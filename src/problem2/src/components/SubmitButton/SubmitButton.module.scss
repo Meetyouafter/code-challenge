@@ -1,0 +1,35 @@
+.submit {
+  height: 52px;
+  border: 0;
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fff;
+  cursor: pointer;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  transition:
+    opacity 0.15s,
+    transform 0.1s;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  &.loading {
+    opacity: 0.8;
+    cursor: progress;
+    animation: pulse 1s infinite;
+  }
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
