@@ -6,3 +6,6 @@ export const DEFAULT_TO_TOKEN = "USDC";
 
 export const SWAP_DELAY_MS = 1500;
 export const TOAST_DURATION_MS = 4000;
+
+/** Allowed characters while typing an amount: digits and one "." or ",". */
+export const AMOUNT_PATTERN = /^\d*[.,]?\d*$/;
