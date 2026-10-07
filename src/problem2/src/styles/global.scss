@@ -16,6 +16,12 @@ body {
   }
 }
 
+#root {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
 input {
   flex: 1;
   min-width: 0;

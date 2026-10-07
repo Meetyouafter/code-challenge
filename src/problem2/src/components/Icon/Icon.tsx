@@ -7,11 +7,12 @@ interface IIcon {
 }
 
 const Icon = ({ symbol }: IIcon) => {
-  const [isFailed, setIsFailed] = useState(false);
+  const [failedSymbol, setFailedSymbol] = useState<string | null>(null);
+  const isFailed = failedSymbol === symbol;
 
   return (
     <span className={styles.icon}>
-      {isFailed ? symbol[0] : <img src={iconUrl(symbol)} alt="" onError={() => setIsFailed(true)} />}
+      {isFailed ? symbol[0] : <img key={symbol} src={iconUrl(symbol)} alt="" onError={() => setFailedSymbol(symbol)} />}
     </span>
   );
 };

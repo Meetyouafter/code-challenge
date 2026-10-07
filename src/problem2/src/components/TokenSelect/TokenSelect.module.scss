@@ -1,0 +1,225 @@
+.select {
+  position: relative;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: var(--control-height, 44px);
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--accent);
+  }
+
+  @media (max-width: 360px) {
+    gap: 6px;
+    padding: 0 8px;
+    font-size: 14px;
+  }
+}
+
+.caret {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 21;
+  width: min(230px, calc(100vw - 48px));
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 8px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+
+  @media (max-width: 480px) {
+    position: fixed;
+    inset: auto 16px 16px 16px;
+    width: auto;
+    padding: 12px;
+    border-radius: 20px;
+    animation: slideUp 0.2s ease-out;
+
+    .list {
+      max-height: 50vh;
+      margin-top: 16px;
+    }
+
+    .empty {
+      margin-top: 16px;
+    }
+  }
+}
+
+// catches clicks outside the panel; transparent on desktop, dimmed on mobile
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+
+  @media (max-width: 480px) {
+    background: rgba(5, 6, 12, 0.6);
+    animation: fadeIn 0.2s ease-out;
+  }
+}
+
+// mobile only: sheet header
+
+.header {
+  display: none;
+
+  @media (max-width: 480px) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+}
+
+.heading {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--muted);
+  background: var(--field);
+  transition: color 0.15s;
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  &:hover {
+    color: var(--text);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+}
+
+.list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0 4px 0 0;
+  max-height: 240px;
+  overflow-y: auto;
+
+  @supports not selector(::-webkit-scrollbar) {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: var(--border);
+
+    &:hover {
+      background: var(--muted);
+    }
+  }
+}
+
+.searchWrap {
+  position: relative;
+}
+
+.search {
+  width: 100%;
+  flex: none;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 8px 32px 8px 10px;
+  border-radius: 10px;
+  background: var(--field);
+}
+
+.clear {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: var(--muted);
+  transform: translateY(-50%);
+  transition:
+    color 0.15s,
+    background 0.15s;
+
+  svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  &:hover {
+    color: var(--text);
+    background: var(--border);
+  }
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+
+  &.active {
+    background: var(--field);
+  }
+
+  &[aria-selected="true"] {
+    color: var(--accent2);
+    font-weight: 600;
+  }
+}
+
+.empty {
+  margin-top: 8px;
+  padding: 8px;
+  font-size: 14px;
+  color: var(--muted);
+}
