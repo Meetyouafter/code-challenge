@@ -1,4 +1,5 @@
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import { MOBILE_QUERY } from "@/constants";
 import type { Token } from "@/types";
 
 interface IUseTokenSelect {
@@ -17,16 +18,35 @@ export function useTokenSelect({ tokens, value, onChange }: IUseTokenSelect) {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return q ? tokens.filter((t) => t.currency.toLowerCase().includes(q)) : tokens;
+    if (!q) return tokens;
+    const rank = (t: Token) => {
+      const c = t.currency.toLowerCase();
+      return c === q ? 0 : c.startsWith(q) ? 1 : 2;
+    };
+    return tokens.filter((t) => t.currency.toLowerCase().includes(q)).sort((a, b) => rank(a) - rank(b));
   }, [tokens, query]);
 
   useEffect(() => {
     if (isOpen) listRef.current?.children[activeIndex]?.scrollIntoView({ block: "nearest" });
   }, [isOpen, activeIndex, filtered]);
 
+  useEffect(() => {
+    if (!isOpen || !window.matchMedia(MOBILE_QUERY).matches) return;
+    const { overflow } = document.body.style;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = overflow;
+    };
+  }, [isOpen]);
+
   const open = () => {
     setQuery("");
-    setActiveIndex(Math.max(0, tokens.findIndex((t) => t.currency === value.currency)));
+    setActiveIndex(
+      Math.max(
+        0,
+        tokens.findIndex((t) => t.currency === value.currency),
+      ),
+    );
     setIsOpen(true);
   };
 
@@ -51,8 +71,6 @@ export function useTokenSelect({ tokens, value, onChange }: IUseTokenSelect) {
 
   const onKeyDown = (e: KeyboardEvent) => {
     switch (e.key) {
-      case "Escape":
-        return close();
       case "Tab":
         return setIsOpen(false);
       case "Enter":

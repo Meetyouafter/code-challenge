@@ -7,7 +7,6 @@ export function useTokens() {
   const [isFailed, setIsFailed] = useState(false);
 
   const load = useCallback(() => {
-    setIsFailed(false);
     fetchTokens()
       .then((t) => {
         if (t.length < 2) throw new Error("Not enough tokens");
@@ -18,5 +17,10 @@ export function useTokens() {
 
   useEffect(load, [load]);
 
-  return { tokens, isLoading: !tokens && !isFailed, isFailed, retry: load };
+  const retry = useCallback(() => {
+    setIsFailed(false);
+    load();
+  }, [load]);
+
+  return { tokens, isLoading: !tokens && !isFailed, isFailed, retry };
 }

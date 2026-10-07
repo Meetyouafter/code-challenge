@@ -1,77 +1,89 @@
-import { useState, type FormEvent } from "react";
+import { useCallback, useState, type FormEvent } from "react";
 import { DEFAULT_FROM_TOKEN, DEFAULT_TO_TOKEN, SWAP_DELAY_MS } from "@/constants";
-import { useToast } from "@/components/Toast/ToastContext";
+import { useToast } from "@/hooks/useToast";
 import type { Token } from "@/types";
 import { convert, formatNumber, formatUsd, parseAmount } from "@/utils";
 
 type Side = "from" | "to";
 
-const findToken = (tokens: Token[], symbol: string, fallback: number) =>
-  tokens.find((t) => t.currency === symbol) ?? tokens[fallback];
+interface IPair {
+  from: Token;
+  to: Token;
+}
+
+const initialPair = (tokens: Token[]): IPair => {
+  const from = tokens.find((t) => t.currency === DEFAULT_FROM_TOKEN) ?? tokens[0];
+  const to = tokens.find((t) => t.currency === DEFAULT_TO_TOKEN && t !== from) ?? tokens.find((t) => t !== from)!;
+  return { from, to };
+};
 
 export function useSwapForm(tokens: Token[]) {
   const showToast = useToast();
-  const [fromToken, setFromToken] = useState(() => findToken(tokens, DEFAULT_FROM_TOKEN, 0));
-  const [toToken, setToToken] = useState(() => findToken(tokens, DEFAULT_TO_TOKEN, 1));
+  const [pair, setPair] = useState(() => initialPair(tokens));
   const [edited, setEdited] = useState<Side>("from");
   const [typed, setTyped] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const [srcToken, dstToken] = edited === "from" ? [fromToken, toToken] : [toToken, fromToken];
+  const [srcToken, dstToken] = edited === "from" ? [pair.from, pair.to] : [pair.to, pair.from];
   const amount = parseAmount(typed);
-  const isSameToken = fromToken.currency === toToken.currency;
-  const isValid = amount > 0 && !isSameToken;
-
-  const amountError = typed && !(amount > 0) ? "Enter an amount greater than 0" : "";
+  const isValid = amount > 0;
+  const amountError = typed && !isValid ? "Enter an amount greater than 0" : "";
   const converted = isValid ? formatNumber(convert(amount, srcToken, dstToken)) : "";
 
-  const editFrom = (v: string) => {
-    setEdited("from");
-    setTyped(v);
-  };
+  const fromValue = edited === "from" ? typed : converted;
+  const toValue = edited === "to" ? typed : converted;
 
-  const editTo = (v: string) => {
-    setEdited("to");
+  const selectFrom = useCallback(
+    (t: Token) => setPair((p) => (t.currency === p.to.currency ? { from: t, to: p.from } : { ...p, from: t })),
+    [],
+  );
+  const selectTo = useCallback(
+    (t: Token) => setPair((p) => (t.currency === p.from.currency ? { from: p.to, to: t } : { ...p, to: t })),
+    [],
+  );
+
+  const edit = (side: Side) => (v: string) => {
+    setEdited(side);
     setTyped(v);
   };
 
   const flip = () => {
-    setFromToken(toToken);
-    setToToken(fromToken);
+    setPair((p) => ({ from: p.to, to: p.from }));
     setEdited(edited === "from" ? "to" : "from");
   };
-
-  const fromValue = edited === "from" ? typed : converted;
-  const toValue = edited === "to" ? typed : converted;
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     if (!isValid || isLoading) return;
     setIsLoading(true);
-    await new Promise((r) => setTimeout(r, SWAP_DELAY_MS)); // mocked backend call
-    setIsLoading(false);
-    setTyped("");
-    setEdited("from");
-    showToast(`Swapped ${fromValue} ${fromToken.currency} → ${toValue} ${toToken.currency}`);
+    try {
+      await new Promise((r) => setTimeout(r, SWAP_DELAY_MS)); // mocked backend call
+      setTyped("");
+      setEdited("from");
+      showToast(`Swapped ${fromValue} ${pair.from.currency} → ${toValue} ${pair.to.currency}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return {
     from: {
       value: fromValue,
-      token: fromToken,
+      token: pair.from,
       error: edited === "from" ? amountError : "",
-      onValueChange: editFrom,
-      onTokenChange: setFromToken,
+      onValueChange: edit("from"),
+      onTokenChange: selectFrom,
     },
     to: {
       value: toValue,
-      token: toToken,
-      error: (edited === "to" && amountError) || (isSameToken ? "Choose different tokens" : ""),
-      onValueChange: editTo,
-      onTokenChange: setToToken,
+      token: pair.to,
+      error: edited === "to" ? amountError : "",
+      onValueChange: edit("to"),
+      onTokenChange: selectTo,
     },
+    // conversion keeps the USD value, so both sides share it
     usd: isValid ? formatUsd(amount * srcToken.price) : "",
-    rate: isSameToken ? "" : `1 ${fromToken.currency} ≈ ${formatNumber(convert(1, fromToken, toToken))} ${toToken.currency}`,
+    rate: `1 ${pair.from.currency} ≈ ${formatNumber(convert(1, pair.from, pair.to))} ${pair.to.currency}`,
     isValid,
     isLoading,
     flip,

@@ -1,8 +1,8 @@
-import { PRICES_URL } from "@/constants";
+import { FETCH_TIMEOUT_MS, PRICES_URL } from "@/constants";
 import type { Token } from "@/types";
 
 export async function fetchTokens(): Promise<Token[]> {
-  const res = await fetch(PRICES_URL);
+  const res = await fetch(PRICES_URL, { signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const data: Token[] = await res.json();
 

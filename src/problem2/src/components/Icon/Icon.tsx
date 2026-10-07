@@ -12,7 +12,11 @@ const Icon = ({ symbol }: IIcon) => {
 
   return (
     <span className={styles.icon}>
-      {isFailed ? symbol[0] : <img key={symbol} src={iconUrl(symbol)} alt="" onError={() => setFailedSymbol(symbol)} />}
+      {isFailed ? (
+        symbol[0]
+      ) : (
+        <img key={symbol} src={iconUrl(symbol)} alt="" loading="lazy" onError={() => setFailedSymbol(symbol)} />
+      )}
     </span>
   );
 };

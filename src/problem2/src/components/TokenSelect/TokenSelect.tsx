@@ -48,7 +48,7 @@ const TokenSelect = ({ tokens, value, onChange }: ITokenSelect) => {
       {isOpen && (
         <>
           <div className={styles.backdrop} onClick={close} aria-hidden="true" />
-          <div className={styles.panel}>
+          <div className={styles.panel} onKeyDown={(e) => e.key === "Escape" && close()}>
             <div className={styles.header}>
               <span className={styles.heading}>Select token</span>
               <button type="button" className={styles.close} aria-label="Close" onClick={close}>

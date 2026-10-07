@@ -15,7 +15,17 @@ interface IAmountField {
   onTokenChange: (t: Token) => void;
 }
 
-const AmountField = ({ label, inputId, value, token, tokens, usd, error, onValueChange, onTokenChange }: IAmountField) => {
+const AmountField = ({
+  label,
+  inputId,
+  value,
+  token,
+  tokens,
+  usd,
+  error,
+  onValueChange,
+  onTokenChange,
+}: IAmountField) => {
   return (
     <div className={`${styles.field} ${error ? styles.invalid : ""}`}>
       <label htmlFor={inputId}>{label}</label>

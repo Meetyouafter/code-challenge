@@ -3,20 +3,27 @@ import { TOAST_DURATION_MS } from "@/constants";
 import styles from "./Toast.module.scss";
 
 interface IToast {
-  message: string | null;
+  id?: number;
+  text?: string;
+  isVisible: boolean;
   onHide: () => void;
 }
 
-const Toast = ({ message, onHide }: IToast) => {
+const Toast = ({ id, text, isVisible, onHide }: IToast) => {
   useEffect(() => {
-    if (!message) return;
+    if (!isVisible) return;
     const timer = setTimeout(onHide, TOAST_DURATION_MS);
     return () => clearTimeout(timer);
-  }, [message, onHide]);
+  }, [id, isVisible, onHide]);
 
   return (
-    <div className={`${styles.toast} ${message ? styles.show : ""}`} role="status" aria-live="polite">
-      {message && `✓ ${message}`}
+    <div className={`${styles.toast} ${isVisible ? styles.show : ""}`} role="status">
+      {text && (
+        <>
+          <span aria-hidden="true">✓ </span>
+          {text}
+        </>
+      )}
     </div>
   );
 };
